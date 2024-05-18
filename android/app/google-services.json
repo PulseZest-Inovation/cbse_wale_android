@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804819670609",
+    "project_id": "cbse-wale-4f2a9",
+    "storage_bucket": "cbse-wale-4f2a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804819670609:android:58482eb1902e664d0d0a70",
+        "android_client_info": {
+          "package_name": "com.pulsezest.cbse_wale_android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDF5dQTgKU3eFtiPHsX1NZt9J_kWqd4mc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
