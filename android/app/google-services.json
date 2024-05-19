@@ -12,7 +12,20 @@
           "package_name": "com.pulsezest.cbse_wale_android"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "804819670609-m2kid2tcvgh0em5smasgq44sibhnmuln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pulsezest.cbse_wale_android",
+            "certificate_hash": "8c88f18dd3d811594c39711205ad235aeed73544"
+          }
+        },
+        {
+          "client_id": "804819670609-8p1mmvh9s58ffktqbjuqksf3aoeelhu4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDDF5dQTgKU3eFtiPHsX1NZt9J_kWqd4mc"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804819670609-8p1mmvh9s58ffktqbjuqksf3aoeelhu4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
