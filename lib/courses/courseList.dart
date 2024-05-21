@@ -90,10 +90,12 @@ class _CourseListState extends State<CourseList> {
                   children: [
                     buildSection(title: 'My Library', icon: Icons.book),
                     buildSection(title: 'Live Classes', icon: Icons.live_tv),
-                    buildSection(title: 'Live Tests', icon: Icons.assessment),
+                    buildSection(title: 'Test Series', icon: Icons.assessment),
                   ],
                 ),
               ),
+
+              //shamiar
 
               // Divider line
               const Divider(

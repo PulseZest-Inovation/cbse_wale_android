@@ -1,3 +1,4 @@
+import 'package:cbse_wale_android/logout/logoutFxn.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -13,6 +14,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: true,
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
             text,
@@ -21,6 +23,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          IconButton(
+              onPressed: () {
+                LogoutFxn.logout(context);
+              },
+              icon: Icon(Icons.logout)),
         ],
       ),
       actions: [
