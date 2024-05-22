@@ -1,5 +1,6 @@
 import 'package:cbse_wale_android/courses/courseList.dart';
 import 'package:cbse_wale_android/signup/signup.dart';
+import 'package:cbse_wale_android/widgets/bottomNavigationBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pop(context);
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (_) => CourseList(),
+                  builder: (_) => BottomBar(),
                 ),
               );
             } else {
@@ -130,23 +131,95 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<dynamic> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      if (googleUser != null) {
+        final GoogleSignInAuthentication? googleAuth =
+            await googleUser.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-      String? email = FirebaseAuth.instance.currentUser?.email;
-      String? phn = FirebaseAuth.instance.currentUser?.phoneNumber;
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+
+        final UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+
+        // Check if user already exists in Firebase based on email
+        final String userEmail = googleUser.email;
+        final DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+            await FirebaseFirestore.instance
+                .collection('students')
+                .doc(userEmail)
+                .get();
+
+        if (docSnapshot.exists) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => Center(
+              child: Container(
+                  height: 50, width: 50, child: CircularProgressIndicator()),
+            ),
+          );
+
+          final Map<String, dynamic> studentData = docSnapshot.data()!;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('userId', docSnapshot.reference.id);
+          prefs.setString('name', studentData['name'] ?? '');
+          prefs.setString('email', studentData['email']);
+          prefs.setString('phone', studentData['phone'] ?? '');
+          print("Login successful");
+
+          ToastUtil.showToast(message: "Login Successful", fontSize: 18.0);
+          Navigator.pop(context);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => BottomBar(),
+            ),
+          );
+          return;
+        }
+
+        // If user doesn't exist, create a new document with name and email
+        final String documentId = userCredential.user!.uid;
+
+        final Map<String, dynamic> studentData = {
+          'name': googleUser.displayName ?? '',
+          'email': userEmail,
+          'mobileNumber': '',
+        };
+        await FirebaseFirestore.instance
+            .collection('students')
+            .doc(documentId)
+            .set(studentData);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('userId', documentId);
+        prefs.setString('name', googleUser.displayName ?? '');
+        prefs.setString('email', userEmail);
+        prefs.setString('phone', '');
+        print("Login successful");
+
+        ToastUtil.showToast(message: "Login Successful", fontSize: 18.0);
+        Navigator.pop(context);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => BottomBar(),
+          ),
+        );
+
+        return;
+      } else {
+        print('User did not sign in with Google');
+        return null;
+      }
     } on Exception catch (e) {
-      // TODO
-      print('exception->$e');
+      print('Exception during sign-in: $e');
+      ToastUtil.showToast(message: "Something went wrong : e!", fontSize: 18.0);
+      return;
     }
   }
 
@@ -349,262 +422,3 @@ class _LoginPageState extends State<LoginPage> {
 // slider ki jagah logo
 // email password
 //register option
-
-// import 'package:cbse_wale_android/widgets/appBar.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'dart:async';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
-// import '../widgets/colorTheme.dart';
-//
-// class LoginPage extends StatefulWidget {
-//   @override
-//   _LoginPageState createState() => _LoginPageState();
-// }
-//
-// class _LoginPageState extends State<LoginPage> {
-//   late PageController _pageController;
-//   int _currentPage = 0;
-//   late Timer _timer;
-//   bool _showPassword = false;
-//
-//   List<String> imageUrls = [
-//     'https://images.hdqwalls.com/download/healing-within-wb-7680x4320.jpg',
-//     'https://images.hdqwalls.com/download/beerus-dragon-ball-qb-7680x4320.jpg',
-//     'https://media.istockphoto.com/id/1505391132/photo/summer-joy.jpg?s=2048x2048&w=is&k=20&c=veczVEsq_TfunScXvVqqepQSUpTPaYPCAMvpVCOgxSE=',
-//   ];
-//
-//   Future<dynamic> signInWithGoogle() async {
-//     try {
-//       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-//
-//       final GoogleSignInAuthentication? googleAuth =
-//           await googleUser?.authentication;
-//
-//       final credential = GoogleAuthProvider.credential(
-//         accessToken: googleAuth?.accessToken,
-//         idToken: googleAuth?.idToken,
-//       );
-//       String? email = FirebaseAuth.instance.currentUser?.email;
-//       String? phn = FirebaseAuth.instance.currentUser?.phoneNumber;
-//       return await FirebaseAuth.instance.signInWithCredential(credential);
-//     } on Exception catch (e) {
-//       // TODO
-//       print('exception->$e');
-//     }
-//   }
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _pageController = PageController(initialPage: 0);
-//     _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
-//       if (_currentPage < imageUrls.length - 1) {
-//         _currentPage++;
-//       } else {
-//         _currentPage = 0;
-//       }
-//       if (_pageController.hasClients) {
-//         _pageController.animateToPage(
-//           _currentPage,
-//           duration: Duration(milliseconds: 300),
-//           curve: Curves.easeIn,
-//         );
-//       }
-//     });
-//   }
-//
-//   @override
-//   void dispose() {
-//     _pageController.dispose();
-//     _timer.cancel();
-//     super.dispose();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: ThemeData(
-//         primaryColor: AppColors.primary,
-//         textTheme: TextTheme(
-//           bodyText1: TextStyle(color: AppColors.text), // Text color
-//         ),
-//       ),
-//       debugShowCheckedModeBanner: false,
-//       home: Scaffold(
-//         appBar: CustomAppBar(
-//           text: "Login Page",
-//         ),
-//         body: SingleChildScrollView(
-//           child: Column(
-//             children: <Widget>[
-//               SizedBox(height: 10),
-//               Container(
-//                 height: 200,
-//                 child: PageView.builder(
-//                   controller: _pageController,
-//                   itemCount: imageUrls.length,
-//                   onPageChanged: (int page) {
-//                     setState(() {
-//                       _currentPage = page;
-//                     });
-//                   },
-//                   itemBuilder: (context, index) {
-//                     return Image.network(imageUrls[index]);
-//                   },
-//                 ),
-//               ),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: List<Widget>.generate(imageUrls.length, (int index) {
-//                   return Container(
-//                     width: 8.0,
-//                     height: 8.0,
-//                     margin:
-//                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-//                     decoration: BoxDecoration(
-//                       shape: BoxShape.circle,
-//                       color: _currentPage == index ? Colors.blue : Colors.grey,
-//                     ),
-//                   );
-//                 }),
-//               ),
-//               SizedBox(height: 30),
-//               Text(
-//                 "Welcome to CBSE_WALE",
-//                 style: GoogleFonts.acme(
-//                   fontSize: 25.0,
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//               SizedBox(height: 20),
-//               Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 16.0),
-//                 child: TextFormField(
-//                   decoration: InputDecoration(
-//                     labelText: 'Name',
-//                     prefixIcon: Icon(Icons.person),
-//                     contentPadding: EdgeInsets.all(16.0),
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(8.0),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               SizedBox(height: 10),
-//               Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 16.0),
-//                 child: TextFormField(
-//                   keyboardType: TextInputType.phone,
-//                   decoration: InputDecoration(
-//                     labelText: 'Mobile Number',
-//                     prefixIcon: Icon(Icons.phone),
-//                     contentPadding: EdgeInsets.all(16.0),
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(8.0),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               SizedBox(height: 10),
-//               Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 16.0),
-//                 child: TextFormField(
-//                   obscureText: !_showPassword,
-//                   decoration: InputDecoration(
-//                     labelText: 'Password',
-//                     prefixIcon: Icon(Icons.lock),
-//                     suffixIcon: IconButton(
-//                       icon: Icon(_showPassword
-//                           ? Icons.visibility
-//                           : Icons.visibility_off),
-//                       onPressed: () {
-//                         setState(() {
-//                           _showPassword = !_showPassword;
-//                         });
-//                       },
-//                     ),
-//                     contentPadding: EdgeInsets.all(16.0),
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(8.0),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               SizedBox(height: 20),
-//               ElevatedButton(
-//                 onPressed: () {},
-//                 child: Text(
-//                   'Login',
-//                   style: GoogleFonts.acme(
-//                     fontSize: 20.0,
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor:
-//                       Colors.orange, // Set button background to orange
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(
-//                         10.0), // Add optional rounded corners
-//                   ),
-//                 ),
-//               ),
-//               SizedBox(height: 10),
-//               Row(
-//                 children: [
-//                   const Expanded(child: Divider()),
-//                   Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//                     child: Text('or sign in with'),
-//                   ),
-//                   const Expanded(child: Divider()),
-//                 ],
-//               ),
-//               SizedBox(height: 10),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                 children: [
-//                   ElevatedButton(
-//                     onPressed: () async {
-//                       try {
-//                         await signInWithGoogle();
-//                         // Handle successful sign-in (e.g., navigate to a different screen)
-//                         print('Sign-in successful!');
-//                       } on Exception catch (e) {
-//                         print('Sign-in failed: $e');
-//                         // Show an error message to the user (e.g., using SnackBar)
-//                       }
-//                     },
-//                     child: FaIcon(
-//                       FontAwesomeIcons.google,
-//                       color: Colors.white, // Set icon color to white
-//                     ),
-//                     style: ElevatedButton.styleFrom(
-//                       backgroundColor:
-//                           Colors.orange, // Set button background to orange
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(
-//                             10.0), // Add optional rounded corners
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// //TODO: if successful login, set login var in database to true and check its value while logging in
-//
-// //no app bar
-// // slider ki jagah logo
-// // email password
-// //register option

@@ -1,6 +1,6 @@
-import 'package:cbse_wale_android/courses/courseList.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/bottomNavigationBar.dart';
 import 'loginPage.dart';
 
 class CheckLogin extends StatelessWidget {
@@ -14,7 +14,7 @@ class CheckLogin extends StatelessWidget {
         } else {
           final bool isLoggedIn = snapshot.data?['isLoggedIn'] ?? false;
           if (isLoggedIn) {
-            return CourseList();
+            return BottomBar();
           } else {
             return LoginPage();
           }

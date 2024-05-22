@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:cbse_wale_android/courses/courseList.dart';
+import 'package:cbse_wale_android/widgets/bottomNavigationBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -92,7 +92,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? CourseList()
+      ? BottomBar()
       : Scaffold(
           appBar: CustomAppBar(text: 'Verify your Account'),
           body: Padding(
