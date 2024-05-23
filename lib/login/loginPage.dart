@@ -1,4 +1,3 @@
-import 'package:cbse_wale_android/courses/courseList.dart';
 import 'package:cbse_wale_android/signup/signup.dart';
 import 'package:cbse_wale_android/widgets/bottomNavigationBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -218,7 +217,8 @@ class _LoginPageState extends State<LoginPage> {
       }
     } on Exception catch (e) {
       print('Exception during sign-in: $e');
-      ToastUtil.showToast(message: "Something went wrong : e!", fontSize: 18.0);
+      ToastUtil.showToast(
+          message: "Something went wrong : $e!", fontSize: 18.0);
       return;
     }
   }

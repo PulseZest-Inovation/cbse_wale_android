@@ -1,4 +1,3 @@
-import 'package:cbse_wale_android/courses/courseList.dart';
 import 'package:cbse_wale_android/utils/FirebaseInitializationApp.dart';
 import 'package:cbse_wale_android/widgets/colorTheme.dart';
 import 'package:firebase_auth/firebase_auth.dart';

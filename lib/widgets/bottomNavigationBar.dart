@@ -1,4 +1,5 @@
-import 'package:cbse_wale_android/courses/courseList.dart';
+import 'package:cbse_wale_android/HomePage/homePage.dart';
+// import 'package:cbse_wale_android/courses/courseList.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,16 +13,11 @@ class _BottomBarState extends State<BottomBar> with WidgetsBindingObserver {
   int _currentIndex = 0;
   final PageController _pageController = PageController(initialPage: 0);
   final List<Widget> _tabs = [
-    CourseList(),
-    CourseList(),
-    CourseList(),
-    CourseList(),
-    CourseList(),
-    // StudentAnalytics(),
-    // StudyZone(),
-    // StudentDashboard(),
-    // StudentNotificationScreen(),
-    // SettingScreen(),
+    HomePage(),
+    HomePage(),
+    HomePage(),
+    HomePage(),
+    HomePage(),
   ];
 
   @override
