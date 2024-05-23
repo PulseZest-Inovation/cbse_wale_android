@@ -1,3 +1,4 @@
+import 'package:cbse_wale_android/Tab.dart';
 import 'package:cbse_wale_android/courses/courseList.dart';
 import 'package:cbse_wale_android/profile.dart';
 import 'package:cbse_wale_android/utils/FirebaseInitializationApp.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: InfoPage(),
+      home:InfoPage(),
       // LoginPage(),
     );
   }
