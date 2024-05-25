@@ -23,16 +23,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          IconButton(
-              onPressed: () {
-                LogoutFxn.logout(context);
-              },
-              icon: Icon(Icons.logout)),
         ],
       ),
-      actions: [
-        IconButton(onPressed: onPressed, icon: Icon(Icons.account_circle))
-      ],
       iconTheme: IconThemeData(
         color: Colors.white,
       ),

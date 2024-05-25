@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import '../widgets/sideBar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,11 +20,7 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic>? teacherData;
   String url = '';
   bool isLoading = false;
-  List<String> imageUrls = [
-    // 'https://images.hdqwalls.com/download/healing-within-wb-7680x4320.jpg',
-    // 'https://images.hdqwalls.com/download/beerus-dragon-ball-qb-7680x4320.jpg',
-    // 'https://media.istockphoto.com/id/1505391132/photo/summer-joy.jpg?s=2048x2048&w=is&k=20&c=veczVEsq_TfunScXvVqqepQSUpTPaYPCAMvpVCOgxSE=',
-  ];
+  List<String> imageUrls = [];
   List<Map<String, dynamic>> courseInfo = [];
   List<Map<String, dynamic>> activeCourses = [];
   List<Map<String, dynamic>> pastCourses = [];
@@ -96,7 +93,6 @@ class _HomePageState extends State<HomePage> {
     for (var course in courseInfo) {
       final startDateString = course['startDate'];
       final endDateString = course['endDate'];
-
       final startDate = DateTime.parse(startDateString);
       final endDate = DateTime.parse(endDateString);
       final now = DateTime.now();
@@ -111,6 +107,7 @@ class _HomePageState extends State<HomePage> {
         //consider it active
         activeCourses.add(course);
       }
+      print(course);
     }
   }
 
@@ -118,6 +115,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(text: 'Courses'),
+      drawer: SideBar(),
       body: isLoading
           ? Shimmer.fromColors(
               baseColor: Colors.grey.shade100,
@@ -223,9 +221,12 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: TabBarView(
                             children: [
-                              CourseDisplay(courseList: activeCourses),
-                              CourseDisplay(courseList: pastCourses),
-                              CourseDisplay(courseList: futureCourses),
+                              CourseDisplay(
+                                  courseList: activeCourses, type: 'Active'),
+                              CourseDisplay(
+                                  courseList: pastCourses, type: 'Past'),
+                              CourseDisplay(
+                                  courseList: futureCourses, type: 'Future'),
                             ],
                           ),
                         ),
