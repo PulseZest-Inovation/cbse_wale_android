@@ -159,7 +159,7 @@ class _DetailsTabState extends State<DetailsTab>
 
   @override
   Widget build(BuildContext context) {
-    final teacherName = widget.courseData['teacher'] ?? 'N/A';
+    final teacherName = widget.courseData['teacherName'] ?? 'N/A';
     final courseDuration = widget.courseData['duration'] ?? 'N/A';
     final courseValidity = 'Till Examination';
     final rating = widget.courseData['totalRating'];

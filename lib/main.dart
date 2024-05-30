@@ -1,11 +1,7 @@
 import 'package:cbse_wale_android/utils/FirebaseInitializationApp.dart';
 import 'package:cbse_wale_android/widgets/colorTheme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'login/checkLogin.dart';
-import 'login/loginPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

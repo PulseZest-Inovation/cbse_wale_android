@@ -56,7 +56,6 @@ class _CourseDisplayState extends State<CourseDisplay> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Container(
-        // width: MediaQuery.of(context).size.width * 0.42,
         padding: EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

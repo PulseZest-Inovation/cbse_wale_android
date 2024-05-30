@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
-  final VoidCallback? onPressed;
-  const CustomAppBar({super.key, required this.text, this.onPressed});
+  final bool value;
+  const CustomAppBar({super.key, required this.text, this.value = true});
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: true,
+      automaticallyImplyLeading: value,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

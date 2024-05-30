@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../TestSeries/testsDisplay.dart';
+
 class BottomBar extends StatefulWidget {
   @override
   _BottomBarState createState() => _BottomBarState();
@@ -16,7 +18,7 @@ class _BottomBarState extends State<BottomBar> with WidgetsBindingObserver {
     HomePage(),
     HomePage(),
     HomePage(),
-    HomePage(),
+    TestsDisplay(),
     HomePage(),
   ];
 
