@@ -1,11 +1,16 @@
 import 'package:cbse_wale_android/utils/FirebaseInitializationApp.dart';
 import 'package:cbse_wale_android/widgets/colorTheme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'login/checkLogin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
+
+
+
   runApp(MyApp());
 }
 

@@ -544,25 +544,23 @@ class _GiveTestState extends State<GiveTest> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.pushReplacement(
+                                          Navigator.pushAndRemoveUntil(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ResultScreen(
-                                                      selectedOptions:
-                                                          selectedOptions,
-                                                      attempted: attempted,
-                                                      totalQues: totalQues,
-                                                      testData: widget.testData,
-                                                      timeLeft: widget.testData[
-                                                                  'totalTime'] *
-                                                              60 -
-                                                          time,
-                                                    )),
+                                              builder: (context) => ResultScreen(
+                                                selectedOptions: selectedOptions,
+                                                attempted: attempted,
+                                                totalQues: totalQues,
+                                                testData: widget.testData,
+                                                timeLeft: widget.testData['totalTime'] * 60 - time,
+                                              ),
+                                            ),
+                                                (route) => false, // This will remove all the previous routes
                                           );
                                           timer?.cancel();
                                           timer = null;
                                         },
+
                                         child: Text(
                                           'Submit',
                                           style: TextStyle(color: Colors.black),

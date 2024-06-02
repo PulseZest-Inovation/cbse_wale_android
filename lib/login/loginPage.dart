@@ -13,7 +13,7 @@ import '../signup/verifyEmail.dart';
 import '../widgets/colorTheme.dart';
 import '../widgets/customFlutterToast.dart';
 
-class LoginPage extends StatefulWidget {
+class  LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -132,94 +132,29 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> signInWithGoogle() async {
     try {
+      // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      if (googleUser != null) {
-        final GoogleSignInAuthentication? googleAuth =
-            await googleUser.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-        final UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+      // Sign in to Firebase with the Google [UserCredential]
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
-        // Check if user already exists in Firebase based on email
-        final String userEmail = googleUser.email;
-        final DocumentSnapshot<Map<String, dynamic>> docSnapshot =
-            await FirebaseFirestore.instance
-                .collection('students')
-                .doc(userEmail)
-                .get();
-
-        if (docSnapshot.exists) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) => Center(
-              child: Container(
-                  height: 50, width: 50, child: CircularProgressIndicator()),
-            ),
-          );
-
-          final Map<String, dynamic> studentData = docSnapshot.data()!;
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('userId', docSnapshot.reference.id);
-          prefs.setString('name', studentData['name'] ?? '');
-          prefs.setString('email', studentData['email']);
-          prefs.setString('phone', studentData['phone'] ?? '');
-          print("Login successful");
-
-          ToastUtil.showToast(message: "Login Successful", fontSize: 18.0);
-          Navigator.pop(context);
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => BottomBar(),
-            ),
-          );
-          return;
-        }
-
-        // If user doesn't exist, create a new document with name and email
-        final String documentId = userCredential.user!.uid;
-
-        final Map<String, dynamic> studentData = {
-          'name': googleUser.displayName ?? '',
-          'email': userEmail,
-          'mobileNumber': '',
-        };
-        await FirebaseFirestore.instance
-            .collection('students')
-            .doc(documentId)
-            .set(studentData);
-
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('userId', documentId);
-        prefs.setString('name', googleUser.displayName ?? '');
-        prefs.setString('email', userEmail);
-        prefs.setString('phone', '');
-        print("Login successful");
-
-        ToastUtil.showToast(message: "Login Successful", fontSize: 18.0);
-        Navigator.pop(context);
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => BottomBar(),
-          ),
-        );
-
-        return;
-      } else {
-        print('User did not sign in with Google');
-        return null;
-      }
-    } on Exception catch (e) {
-      print('Exception during sign-in: $e');
-      ToastUtil.showToast(
-          message: "Something went wrong : $e!", fontSize: 18.0);
-      return;
+      // Once signed in, navigate to the BottomScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) =>  BottomBar()),
+      );
+    } catch (e) {
+      print('Error signing in with Google: $e');
+      // Handle error here if needed
     }
   }
 
