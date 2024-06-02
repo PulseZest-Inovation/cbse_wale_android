@@ -1,10 +1,9 @@
 import 'dart:async';
-
+import 'package:cbse_wale_android/TestSeries/resultScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:styled_divider/styled_divider.dart';
 import '../widgets/appBar.dart';
 
 class GiveTest extends StatefulWidget {
@@ -128,6 +127,7 @@ class _GiveTestState extends State<GiveTest> {
   }
 
   void getSectionNames() {
+    print('test data = ${widget.testData}');
     int end = 0;
     for (int i = 0; i < widget.testData['sections'].length; i++) {
       String name = widget.testData['sections'][i]['sectionName'];
@@ -148,7 +148,7 @@ class _GiveTestState extends State<GiveTest> {
       });
     }
 
-    print(quesNumbers);
+    // print(quesNumbers);
 
     setState(() {
       selectedSection = sectionNames[0];
@@ -160,20 +160,20 @@ class _GiveTestState extends State<GiveTest> {
       questionData[widget.testData['sections'][i]['sectionName']] =
           widget.testData['sections'][i]['questions'];
     }
-    print(questionData);
+    // print('question dataaaaa ==== $questionData');
   }
 
   Widget buildQuestion(int start, int quesNum, String sectionName) {
-    print('quesnum = ' + quesNum.toString());
-    print('start = ' + start.toString());
+    // print('quesnum = ' + quesNum.toString());
+    // print('start = ' + start.toString());
     Map<String, dynamic> mp = questionData[sectionName]?[quesNum - start];
     setState(() {
       visited[sectionName]![quesNum - start] = 1;
       // visitedEle += 1;
     });
-    print(visited);
-    print(selectedOptions);
-    print(markedReview);
+    // print(visited);
+    // print(selectedOptions);
+    // print(markedReview);
     int selectedOption = selectedOptions[selectedSection]![quesNum - start];
     return Expanded(
       child: SingleChildScrollView(
@@ -272,7 +272,7 @@ class _GiveTestState extends State<GiveTest> {
                         currentQuestion = quesNumbers[selectedSection]![0]; // +
                         // visited[selectedSection]!.indexWhere((visit) => visit == 1);
                       });
-                      print(value);
+                      // print(value);
                     }, // Use the callback function
                   ),
                 ),
@@ -543,8 +543,26 @@ class _GiveTestState extends State<GiveTest> {
                                         ),
                                       ),
                                       TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ResultScreen(
+                                                      selectedOptions:
+                                                          selectedOptions,
+                                                      attempted: attempted,
+                                                      totalQues: totalQues,
+                                                      testData: widget.testData,
+                                                      timeLeft: widget.testData[
+                                                                  'totalTime'] *
+                                                              60 -
+                                                          time,
+                                                    )),
+                                          );
+                                          timer?.cancel();
+                                          timer = null;
+                                        },
                                         child: Text(
                                           'Submit',
                                           style: TextStyle(color: Colors.black),

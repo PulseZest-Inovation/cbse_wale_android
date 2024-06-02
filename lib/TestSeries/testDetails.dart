@@ -181,7 +181,7 @@ class _TestDetailsState extends State<TestDetails> {
               child: ElevatedButton(
                 onPressed: () {
                   if (isChecked)
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => GiveTest(
